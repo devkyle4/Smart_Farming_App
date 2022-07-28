@@ -114,7 +114,7 @@ class _DisplayWeatherState extends State<DisplayWeather> {
                                               fontWeight: FontWeight.w500))),
                                   Row(children: [
                                     Row(children: [
-                                      const Icon(FontAwesomeIcons.droplet,
+                                      Icon(FontAwesomeIcons.droplet,
                                           size: 14, color: Colors.blueAccent),
                                       Text(' ${snapshot.data?.humidity}%',
                                           style: const TextStyle(
