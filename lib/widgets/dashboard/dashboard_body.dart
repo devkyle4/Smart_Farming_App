@@ -2,6 +2,7 @@ import 'package:final_year_project/widgets/atmospheric_temp_time.dart';
 import 'package:flutter/material.dart';
 import 'package:final_year_project/widgets/sensors_page.dart';
 import '../power_button.dart';
+import '../weather/display_weather_widget.dart';
 
 class DashboardBody extends StatefulWidget {
   const DashboardBody({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class _DashboardBodyState extends State<DashboardBody> {
       child: ClipRRect(
         child: Column(
           children: const [
-            AtmosTempTime(),
+            DisplayWeather(),
             PowerButton(),
             //SECOND CONTAINER
             Expanded(
