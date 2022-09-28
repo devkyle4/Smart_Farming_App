@@ -2,9 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_year_project/widgets/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../../colors/constants.dart';
+import '../../utilities//colors/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../../model/user_model.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -175,7 +174,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           padding:const EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () {
-            // signUp(emailEditingController.text, passwordEditingController.text);
+             signUp(emailEditingController.text, passwordEditingController.text);
           },
           child: const Text(
             "SignUp",
@@ -241,9 +240,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       try {
         await _auth
             .createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) => {postDetailsToFirestore()})
+            .then((value) =>  postDetailsToFirestore())
             .catchError((e) {
           Fluttertoast.showToast(msg: e!.message);
+          print('there is an error');
         });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
@@ -269,7 +269,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             errorMessage = "An undefined Error happened.";
         }
         Fluttertoast.showToast(msg: errorMessage!);
-        print(error.code);
       }
     }
   }
@@ -277,8 +276,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   postDetailsToFirestore() async {
     // calling our firestore
     // calling our user model
-    // sedning these values
-
+    // sending these values
+    print('pressed');
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
 
@@ -298,7 +297,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     Navigator.pushAndRemoveUntil(
         (context),
-        MaterialPageRoute(builder: (context) => const Dashboard(title: 'My Dahboard',)),
+        MaterialPageRoute(builder: (context) => const Dashboard(title: 'My Dashboard',)),
         (route) => false);
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
-import '../colors/constants.dart';
+import '../utilities/colors/constants.dart';
 
 class PowerButton extends StatefulWidget {
   const PowerButton({Key? key}) : super(key: key);

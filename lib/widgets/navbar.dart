@@ -1,6 +1,12 @@
+import 'package:final_year_project/widgets/predict_weed/upload_weed.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../widgets/login/loginpage.dart';
 
 class NavBar extends StatelessWidget {
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -43,7 +49,10 @@ class NavBar extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 46, 67, 103)),
             ),
-            onTap: () => {},
+            onTap: () =>Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) =>  UploadWeed()),
+    ),
           ),
           const Divider(thickness: 1,),
           ListTile(
@@ -80,10 +89,16 @@ class NavBar extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 46, 67, 103))),
-            onTap: () => {},
+            onTap: () =>  {signOut(context)},
           ),
         ],
       ),
     );
+  }
+
+  signOut(context) async{
+    await _auth.signOut();
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context)=> LoginPage()));
   }
 }

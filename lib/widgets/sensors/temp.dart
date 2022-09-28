@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../colors/constants.dart';
+import '../../utilities//colors/constants.dart';
 
 class Temperature extends StatefulWidget {
   const Temperature({Key? key}) : super(key: key);

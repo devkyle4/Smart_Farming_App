@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../colors/constants.dart';
+import '../../utilities/colors/constants.dart';
 
 class LoginPageBody extends StatefulWidget {
   @override
@@ -152,12 +152,12 @@ class _LoginPageBodyState extends State<LoginPageBody> {
               .then((uid) => {
                     Fluttertoast.showToast(msg: "Login Successful"),
                     Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => Dashboard(title: "My Dashboard"))),
+                        MaterialPageRoute(builder: (context) => const Dashboard(title: "My Dashboard"))),
                   });
         } on FirebaseAuthException catch (error) {
           switch (error.code) {
             case "invalid-email":
-              errorMessage = "Your email address appears to be malformed.";
+              errorMessage = "Your email address appears to be incorrect.";
 
               break;
             case "wrong-password":
@@ -180,7 +180,6 @@ class _LoginPageBodyState extends State<LoginPageBody> {
               errorMessage = "An undefined Error happened.";
           }
           Fluttertoast.showToast(msg: errorMessage!);
-          print(error.code);
         }
       }
     }

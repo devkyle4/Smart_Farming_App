@@ -26,7 +26,7 @@ class _PhLevelState extends State<PhLevel> {
                   offset: Offset(-3, -3)),
             ],
           ),
-          child: const Center(child: Text('Hello World:'))),
+          child: const Center(child: Text('pH: 7'))),
     );
   }
 }

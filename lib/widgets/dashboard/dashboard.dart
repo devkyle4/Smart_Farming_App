@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dashboard_body.dart';
-import '../../colors/constants.dart';
+import '../../utilities/colors/constants.dart';
 import '../navbar.dart';
 
 class Dashboard extends StatefulWidget {

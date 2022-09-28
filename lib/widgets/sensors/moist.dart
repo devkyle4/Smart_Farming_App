@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../colors/constants.dart';
+import '../../utilities//colors/constants.dart';
 
 class Moisture extends StatefulWidget {
   const Moisture({Key? key}) : super(key: key);
