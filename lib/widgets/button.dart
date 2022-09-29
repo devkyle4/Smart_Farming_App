@@ -10,12 +10,12 @@ class Button extends StatelessWidget {
   final double elevation;
   const Button(
       {Key? key,
-        required this.label,
-        this.backgroundColor = kGreenColor,
-        this.textColor = Colors.white,
-        required this.onButtonTap,
-        this.disabled = false,
-        this.elevation = 1})
+      required this.label,
+      this.backgroundColor = kGreenColor,
+      this.textColor = Colors.white,
+      required this.onButtonTap,
+      this.disabled = false,
+      this.elevation = 1})
       : super(key: key);
 
   @override
@@ -24,11 +24,11 @@ class Button extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           elevation: elevation,
           minimumSize: const Size.fromHeight(60),
-          backgroundColor: backgroundColor,
-          disabledForegroundColor:
-          const Color.fromRGBO(32, 32, 32, 1).withOpacity(0.38),
-          disabledBackgroundColor:
-          const Color.fromRGBO(32, 32, 32, 1).withOpacity(0.12),
+          primary: backgroundColor,
+          // disabledForegroundColor:
+          // const Color.fromRGBO(32, 32, 32, 1).withOpacity(0.38),
+          // disabledBackgroundColor:
+          // const Color.fromRGBO(32, 32, 32, 1).withOpacity(0.12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           )),

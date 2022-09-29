@@ -47,6 +47,7 @@ class _DisplayWeatherState extends State<DisplayWeather> {
     } catch (e) {
       print(e);
     }
+    return null;
   }
 
   @override
@@ -132,7 +133,7 @@ class _DisplayWeatherState extends State<DisplayWeather> {
                           ]))
                 ]);
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         });
   }

@@ -13,7 +13,6 @@ import '../../widgets/screen_header.dart';
 // import '../wrappers/photo_scanning_async_wrapper.dart';
 import '../back_button_appbar.dart';
 
-
 class UploadWeed extends StatefulWidget {
   @override
   State<UploadWeed> createState() => _UploadWeedState();
@@ -34,39 +33,37 @@ class _UploadWeedState extends State<UploadWeed> {
             const ScreenHeader(
               header: "Upload a photo of your weed",
               description:
-              " Please upload picture of foreign plant for detection, ensure the picture is visible and taken from the right angle",
+                  " Please upload picture of foreign plant for detection, ensure the picture is visible and taken from the right angle",
             ),
             const SizedBox(
               height: 25,
             ),
             _image != null
                 ? UploadPreview(
-              imagePath: _image!.path,
-            )
+                    imagePath: _image!.path,
+                  )
                 : GestureDetector(
-                onTap: () async => {
-                  _image = await _picker.pickImage(
-                      source: ImageSource.gallery),
-                  setState(() {})
-                },
-                child: const PhotoDropZone()),
+                    onTap: () async => {
+                          _image = await _picker.pickImage(
+                              source: ImageSource.gallery),
+                          setState(() {})
+                        },
+                    child: const PhotoDropZone()),
             const SizedBox(
               height: 25,
             ),
-            Button(
-              label: "Proceed",
-              onButtonTap: () async => {}
-              //   context.read<OCRProvider>().setImageByteFile =
-              //   await _image!.readAsBytes(),
-              //   context.read<OCRProvider>().setFileName = _image!.name,
-              //   Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //           builder: (context) =>
-              //           const PhotoScanningAsyncWrapper()))
-              // },
-              // disabled: _image == null,
-            ),
+            Button(label: "Proceed", onButtonTap: () async => {}
+                //   context.read<OCRProvider>().setImageByteFile =
+                //   await _image!.readAsBytes(),
+                //   context.read<OCRProvider>().setFileName = _image!.name,
+                //   Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) =>
+                //           const PhotoScanningAsyncWrapper()))
+                // },
+                // disabled: _image == null,
+                ),
             const SizedBox(
               height: 25,
             ),
@@ -76,7 +73,7 @@ class _UploadWeedState extends State<UploadWeed> {
                 setState(() {})
               },
               style: TextButton.styleFrom(
-                foregroundColor: kBlueColor,
+                primary: kBlueColor,
               ),
               child: const Text("Upload a different photo"),
             )

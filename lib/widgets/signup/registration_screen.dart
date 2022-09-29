@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_year_project/widgets/dashboard/dashboard.dart';
+import 'package:final_year_project/widgets/login/loginpage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../utilities//colors/constants.dart';
@@ -18,7 +19,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String? errorMessage;
 
   //firebase initialization
-   final _auth = FirebaseAuth.instance;
+  final _auth = FirebaseAuth.instance;
 
   // our form key
   final _formKey = GlobalKey<FormState>();
@@ -32,150 +33,190 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     //first name field
-    final firstNameField = TextFormField(
-        autofocus: false,
-        controller: firstNameEditingController,
-        keyboardType: TextInputType.name,
-        validator: (value) {
-          RegExp regex = RegExp(r'^.{3,}$');
-          if (value!.isEmpty) {
-            return ("First Name cannot be Empty");
-          }
-          if (!regex.hasMatch(value)) {
-            return ("Enter Valid name(Min. 3 Character)");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          firstNameEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.account_circle),
-          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "First Name",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ));
+    final firstNameField = Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.only(left: 14, right: 14, top: 4),
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE9E9E9)),
+      ),
+      child: TextFormField(
+          autofocus: false,
+          controller: firstNameEditingController,
+          keyboardType: TextInputType.name,
+          validator: (value) {
+            RegExp regex = RegExp(r'^.{3,}$');
+            if (value!.isEmpty) {
+              return ("First Name cannot be Empty");
+            }
+            if (!regex.hasMatch(value)) {
+              return ("Enter Valid name(Min. 3 Character)");
+            }
+            return null;
+          },
+          onSaved: (value) {
+            firstNameEditingController.text = value!;
+          },
+          textInputAction: TextInputAction.next,
+          decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.account_circle),
+              hintText: "First Name",
+              border: InputBorder.none,
+              hintStyle: TextStyle(
+                  fontWeight: FontWeight.w500, color: Color(0xFF9D9D9D)))),
+    );
 
     //second name field
-    final secondNameField = TextFormField(
-        autofocus: false,
-        controller: secondNameEditingController,
-        keyboardType: TextInputType.name,
-        validator: (value) {
-          if (value!.isEmpty) {
-            return ("Second Name cannot be Empty");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          secondNameEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.account_circle),
-          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Second Name",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ));
+    final secondNameField = Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.only(left: 14, right: 14, top: 4),
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE9E9E9)),
+      ),
+      child: TextFormField(
+          autofocus: false,
+          controller: secondNameEditingController,
+          keyboardType: TextInputType.name,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return ("Second Name cannot be Empty");
+            }
+            return null;
+          },
+          onSaved: (value) {
+            secondNameEditingController.text = value!;
+          },
+          textInputAction: TextInputAction.next,
+          decoration: const InputDecoration(
+            prefixIcon: Icon(Icons.account_circle),
+            hintText: "Second Name",
+            border: InputBorder.none,
+            hintStyle: TextStyle(
+                fontWeight: FontWeight.w500, color: Color(0xFF9D9D9D)),
+          )),
+    );
 
     //email field
-    final emailField = TextFormField(
-        autofocus: false,
-        controller: emailEditingController,
-        keyboardType: TextInputType.emailAddress,
-        validator: (value) {
-          if (value!.isEmpty) {
-            return ("Please Enter Your Email");
-          }
-          // reg expression for email validation
-          if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-              .hasMatch(value)) {
-            return ("Please Enter a valid email");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          firstNameEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.mail),
-          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Email",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ));
+    final emailField = Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.only(left: 14, right: 14, top: 4),
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE9E9E9)),
+      ),
+      child: TextFormField(
+          autofocus: false,
+          controller: emailEditingController,
+          keyboardType: TextInputType.emailAddress,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return ("Please Enter Your Email");
+            }
+            // reg expression for email validation
+            if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                .hasMatch(value)) {
+              return ("Please Enter a valid email");
+            }
+            return null;
+          },
+          onSaved: (value) {
+            firstNameEditingController.text = value!;
+          },
+          textInputAction: TextInputAction.next,
+          decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.mail),
+              contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+              hintText: "Email",
+              border: InputBorder.none,
+              hintStyle: TextStyle(
+                  fontWeight: FontWeight.w500, color: Color(0xFF9D9D9D)))),
+    );
 
     //password field
-    final passwordField = TextFormField(
-        autofocus: false,
-        controller: passwordEditingController,
-        obscureText: true,
-        validator: (value) {
-          RegExp regex =  RegExp(r'^.{6,}$');
-          if (value!.isEmpty) {
-            return ("Password is required for login");
-          }
-          if (!regex.hasMatch(value)) {
-            return ("Enter Valid Password(Min. 6 Character)");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          firstNameEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.vpn_key),
-          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Password",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ));
+    final passwordField = Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.only(left: 14, right: 14, top: 4),
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE9E9E9)),
+      ),
+      child: TextFormField(
+          autofocus: false,
+          controller: passwordEditingController,
+          obscureText: true,
+          validator: (value) {
+            RegExp regex = RegExp(r'^.{6,}$');
+            if (value!.isEmpty) {
+              return ("Password is required for login");
+            }
+            if (!regex.hasMatch(value)) {
+              return ("Enter Valid Password(Min. 6 Character)");
+            }
+            return null;
+          },
+          onSaved: (value) {
+            firstNameEditingController.text = value!;
+          },
+          textInputAction: TextInputAction.next,
+          decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.vpn_key),
+              contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+              hintText: "Password",
+              border: InputBorder.none,
+              hintStyle: TextStyle(
+                  fontWeight: FontWeight.w500, color: Color(0xFF9D9D9D)))),
+    );
 
     //confirm password field
-    final confirmPasswordField = TextFormField(
-        autofocus: false,
-        controller: confirmPasswordEditingController,
-        obscureText: true,
-        validator: (value) {
-          if (confirmPasswordEditingController.text !=
-              passwordEditingController.text) {
-            return "Password don't match";
-          }
-          return null;
-        },
-        onSaved: (value) {
-          confirmPasswordEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.done,
-        decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.vpn_key),
-          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Confirm Password",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ));
+    final confirmPasswordField = Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.only(left: 14, right: 14, top: 4),
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE9E9E9)),
+      ),
+      child: TextFormField(
+          autofocus: false,
+          controller: confirmPasswordEditingController,
+          obscureText: true,
+          validator: (value) {
+            if (confirmPasswordEditingController.text !=
+                passwordEditingController.text) {
+              return "Password don't match";
+            }
+            return null;
+          },
+          onSaved: (value) {
+            confirmPasswordEditingController.text = value!;
+          },
+          textInputAction: TextInputAction.done,
+          decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.vpn_key),
+              contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+              hintText: "Confirm Password",
+              border: InputBorder.none,
+              hintStyle: TextStyle(
+                  fontWeight: FontWeight.w500, color: Color(0xFF9D9D9D)))),
+    );
 
     //signup button
-    final signUpButton = Material(
-      elevation: 5,
-      borderRadius: BorderRadius.circular(30),
-      color: Colors.redAccent,
-      child: MaterialButton(
-          padding:const EdgeInsets.fromLTRB(20, 15, 20, 15),
-          minWidth: MediaQuery.of(context).size.width,
+    final signUpButton = SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: 50,
+      child: ElevatedButton(
           onPressed: () {
-             signUp(emailEditingController.text, passwordEditingController.text);
+            signUp(emailEditingController.text, passwordEditingController.text);
           },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green.shade500,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20))),
           child: const Text(
             "SignUp",
             textAlign: TextAlign.center,
@@ -185,46 +226,57 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
 
     return Scaffold(
-      backgroundColor: kBgColor,
-      appBar: AppBar(
-        backgroundColor: kGreenColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            // passing this to our root
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
+      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            color: kBgColor,
             child: Padding(
-              padding: const EdgeInsets.all(36.0),
+              padding: const EdgeInsets.all(12.0),
               child: Form(
                 key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                   const SizedBox(
-                        height: 180,
-                        ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                    const Text('Register Account',
+                        style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            height: 1.5)),
+                    const Text(
+                        'Complete your details or continue \nwith social media',
+                        textAlign: TextAlign.center),
                     const SizedBox(height: 45),
                     firstNameField,
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     secondNameField,
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     emailField,
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     passwordField,
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     confirmPasswordField,
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
+                    const Text(
+                        'By continuing you confirm that you agree \nwith our Terms and Conditions',
+                        textAlign: TextAlign.center),
+                    const SizedBox(height: 5),
                     signUpButton,
-                    const SizedBox(height: 15),
+                    Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(top: 4),
+                        alignment: Alignment.center,
+                        child: TextButton(
+                            onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                    builder: (context) => LoginPage())),
+                            style: TextButton.styleFrom(
+                              foregroundColor: const Color(0xFF9D9D9D),
+                            ),
+                            child:
+                                const Text('Already have an account? Login..')))
                   ],
                 ),
               ),
@@ -240,7 +292,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       try {
         await _auth
             .createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) =>  postDetailsToFirestore())
+            .then((value) => postDetailsToFirestore())
             .catchError((e) {
           Fluttertoast.showToast(msg: e!.message);
           print('there is an error');
@@ -297,9 +349,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     Navigator.pushAndRemoveUntil(
         (context),
-        MaterialPageRoute(builder: (context) => const Dashboard(title: 'My Dashboard',)),
+        MaterialPageRoute(
+            builder: (context) => const Dashboard(
+                  title: 'My Dashboard',
+                )),
         (route) => false);
   }
-
-  }
-
+}
