@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:final_year_project/widgets/read_about_species.dart';
+import 'package:final_year_project/widgets/read_more.dart';
+import 'package:final_year_project/widgets/webvieweg.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -14,6 +17,8 @@ import '../../widgets/photo_dropzone_box.dart';
 import '../../widgets/screen_header.dart';
 import '../back_button_appbar.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import '../../utilities/reading_links.dart';
 
 class UploadWeed extends StatefulWidget {
   @override
@@ -22,7 +27,7 @@ class UploadWeed extends StatefulWidget {
 
 class _UploadWeedState extends State<UploadWeed> {
   final ImagePicker _picker = ImagePicker();
-  String baseUrl = "http://127.0.0.1:8000";
+  String baseUrl = "https://0995-102-176-65-234.eu.ngrok.io";
   XFile? _image;
   String weedType = '';
   bool isLoading = false;
@@ -30,7 +35,7 @@ class _UploadWeedState extends State<UploadWeed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const BackButtonedAppBar(),
+      //appBar: const BackButtonedAppBar(),
       body: Container(
         padding: Values.screenPadding,
         child: ListView(
@@ -38,7 +43,7 @@ class _UploadWeedState extends State<UploadWeed> {
             const ScreenHeader(
               header: "Upload a photo of your weed",
               description:
-                  " Please upload picture of foreign plant for detection, ensure the picture is visible and taken from the right angle",
+                  " Please upload picture of weed plant for identification, ensure the picture is visible and taken from the right angle",
             ),
             const SizedBox(
               height: 25,
@@ -58,15 +63,15 @@ class _UploadWeedState extends State<UploadWeed> {
               height: 25,
             ),
             if (isLoading) ...[
-              const CircularProgressIndicator(
-                color: Colors.lightGreen,
-                strokeWidth: 4.0,
+              const SpinKitRotatingCircle(
+                color: Color.fromARGB(255, 13, 58, 15),
+                size: 40.0,
               )
             ],
             Button(
                 label: "Proceed",
                 onButtonTap: () async {
-                  if (_image!=null) {
+                  if (_image != null) {
                     uploadImage(_image!.name, await _image!.readAsBytes());
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -90,9 +95,13 @@ class _UploadWeedState extends State<UploadWeed> {
                 setState(() {})
               },
               style: TextButton.styleFrom(
+                // ignore: deprecated_member_use
                 onSurface: kBlueColor,
               ),
-              child: const Text("Upload a different photo"),
+              child: const Text(
+                "Upload a different photo",
+                style: TextStyle(color: Colors.red),
+              ),
             ),
           ],
         ),
@@ -117,24 +126,8 @@ class _UploadWeedState extends State<UploadWeed> {
         showMaterialModalBottomSheet(
           context: context,
           builder: (context) => Container(
-            height: 360.0,
-            child: Center(
-              child: RichText(
-                  text: TextSpan(
-                    text: 'Weed is a',
-                    style: const TextStyle(
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.bold),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: weedType,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  textAlign: TextAlign.center,
-                 // selectionColor: Colors.black26
-                  ),
-            ),
+            height: MediaQuery.of(context).size.height * 0.3,
+            child: PredictionOutputDisplay(weedType: weedType),
           ),
           bounce: true,
           shape:
@@ -142,5 +135,77 @@ class _UploadWeedState extends State<UploadWeed> {
         );
       });
     });
+  }
+}
+
+class PredictionOutputDisplay extends StatelessWidget {
+  const PredictionOutputDisplay({
+    Key? key,
+    required this.weedType,
+  }) : super(key: key);
+
+  final String weedType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Prediction output",
+              style: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25)),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Weed species ",
+                    style: TextStyle(color: Colors.black26, fontSize: 19)),
+                SizedBox(
+                  width: 3,
+                ),
+                Text(
+                  weedType,
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontStyle: FontStyle.italic,
+                      color: Color.fromARGB(255, 119, 185, 121)),
+                ),
+              ],
+            ),
+          ),
+          weedType.toLowerCase() == "other"
+              ? GestureDetector(
+                  onTap: () {
+                    print("pdf url");
+                    print(links[weedType]);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => WebViewExample()));
+                  },child: Text("${links['other']}"))
+              : GestureDetector(
+                  onTap: () {
+                    print("pdf url");
+                    print(links[weedType]);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => ReadMoreWebView(
+                                species: weedType,
+                                link: "${links[weedType]}")));
+                  },
+                  child: Text(
+                    "Read more about $weedType",
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold),
+                  )),
+        ],
+      ),
+    );
   }
 }

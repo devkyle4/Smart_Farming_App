@@ -1,8 +1,10 @@
 import 'package:final_year_project/model/weather_service/weather_model.dart';
+import 'package:final_year_project/utilities/colors/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../model/weather_service/weather_api_client.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class AppDashboardScreen extends StatefulWidget {
   const AppDashboardScreen({Key? key}) : super(key: key);
@@ -12,6 +14,19 @@ class AppDashboardScreen extends StatefulWidget {
 }
 
 class _AppDashboardScreenState extends State<AppDashboardScreen> {
+  //create firebase database instance
+  DatabaseReference temperatureRef = FirebaseDatabase.instance.ref("temp");
+  DatabaseReference dewRef = FirebaseDatabase.instance.ref("dewpoint");
+  DatabaseReference humidityRef = FirebaseDatabase.instance.ref("humid");
+  DatabaseReference soilMoistureRef =
+      FirebaseDatabase.instance.ref("soilmoisture");
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -24,34 +39,106 @@ class _AppDashboardScreenState extends State<AppDashboardScreen> {
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2, mainAxisSpacing: 12, crossAxisSpacing: 12),
               children: [
-                TemperatureGridCards(
-                  data: {
-                    "title": "TEMPERATURE",
-                    "subtitle": "25",
-                    "icon": FontAwesomeIcons.temperatureHalf
-                  },
-                ),
-                TemperatureGridCards(
-                  data: {
-                    "title": "DEW RATE",
-                    "subtitle": "25",
-                    "icon": FontAwesomeIcons.temperatureHalf
-                  },
-                ),
-                PercentageGridCards(
-                  data: {
-                    "title": "HUMIDITY",
-                    "percent": 0.4,
-                    "icon": FontAwesomeIcons.rainbow
-                  },
-                ),
-                PercentageGridCards(
-                  data: {
-                    "title": "SOIL MOISTURE",
-                    "percent":1.0,
-                    "icon": FontAwesomeIcons.water
-                  },
-                ),
+                StreamBuilder<DatabaseEvent>(
+                    stream: temperatureRef.onValue,
+                    builder: (context, snapshop) {
+                      if (!snapshop.hasData) {
+                        return TemperatureGridCards(
+                          data: {
+                            "title": "TEMPERATURE",
+                            "subtitle": "...",
+                            "icon": FontAwesomeIcons.temperatureHalf
+                          },
+                        );
+                      }
+                      if (snapshop.hasError) {
+                        print("snapshot error ...");
+                        print(snapshop.error);
+                      }
+
+                      return TemperatureGridCards(
+                        data: {
+                          "title": "TEMPERATURE",
+                          "subtitle": "${snapshop.data!.snapshot.value}",
+                          "icon": FontAwesomeIcons.temperatureHalf
+                        },
+                      );
+                    }),
+                StreamBuilder<DatabaseEvent>(
+                    stream: dewRef.onValue,
+                    builder: (context, snapshop) {
+                      if (!snapshop.hasData) {
+                        return TemperatureGridCards(
+                          data: {
+                            "title": "DEW RATE",
+                            "subtitle": "...",
+                            "icon": FontAwesomeIcons.droplet
+                          },
+                        );
+                      }
+                      if (snapshop.hasError) {
+                        print("snapshot error ...");
+                        print(snapshop.error);
+                      }
+
+                      return TemperatureGridCards(
+                        data: {
+                          "title": "DEW RATE",
+                          "subtitle": "${snapshop.data!.snapshot.value}",
+                          "icon": FontAwesomeIcons.droplet
+                        },
+                      );
+                    }),
+                StreamBuilder<DatabaseEvent>(
+                    stream: humidityRef.onValue,
+                    builder: (context, snapshop) {
+                      if (!snapshop.hasData) {
+                        return PercentageGridCards(
+                          data: {
+                            "title": "HUMIDITY",
+                            "percent": 0.0,
+                            "icon": FontAwesomeIcons.water
+                          },
+                        );
+                      }
+                      if (snapshop.hasError) {
+                        print("snapshot error ...");
+                        print(snapshop.error);
+                      }
+
+                      return PercentageGridCards(
+                        data: {
+                          "title": "HUMIDITY",
+                          "percent": snapshop.data!.snapshot.value,
+                          "icon": FontAwesomeIcons.rainbow
+                        },
+                      );
+                    }),
+                StreamBuilder<DatabaseEvent>(
+                    stream: soilMoistureRef.onValue,
+                    builder: (context, snapshop) {
+                      if (!snapshop.hasData) {
+                        return PercentageGridCards(
+                          data: {
+                            "title": "SOIL MOISTURE",
+                            "percent": 0.0,
+                            "icon": FontAwesomeIcons.water
+                          },
+                        );
+                      }
+                      if (snapshop.hasError) {
+                        print("snapshot error ...");
+                        print(snapshop.error);
+                      }
+
+                      return PercentageGridCards(
+                        data: {
+                          "title": "SOIL MOISTURE",
+                          "percent": snapshop.data!.snapshot.value,
+                          "icon": FontAwesomeIcons.water
+                        },
+                      );
+                    })
               ],
             ),
           )
@@ -120,7 +207,9 @@ class PercentageGridCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color indicatorColor = Colors.green;
-    int percentage = int.parse((data["percent"] * 100).toString().split(".")[0]);
+    int percentage =
+        int.parse((data["percent"] * 100).toString().split(".")[0]);
+   
     if (data["percent"] <= 0.3) {
       indicatorColor = Colors.red;
     } else if (data["percent"] <= 0.6) {
@@ -154,7 +243,7 @@ class PercentageGridCards extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: FractionallySizedBox(
-                    widthFactor: data["percent"],
+                    widthFactor: data["percent"]>1? (data["percent"]/100 + 0.0):(data["percent"] + 0.0),
                     child: Container(
                       height: 8,
                       decoration: BoxDecoration(
@@ -173,23 +262,22 @@ class PercentageGridCards extends StatelessWidget {
                 children: [
                   Flexible(
                     child: FractionallySizedBox(
-                      widthFactor: data["percent"],
-                     
+                      widthFactor:data["percent"]>1? (data["percent"]/100 + 0.0):(data["percent"] + 0.0),
                     ),
                   ),
                   Container(
-                  padding: EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: indicatorColor),
-                  child: Text(
-                    '${percentage} %',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12),
-                  ),
-                )
+                    padding: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: indicatorColor),
+                    child: Text(
+                      '${percentage>1?percentage/100:percentage} %',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -221,28 +309,26 @@ class WeatherCard extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Colors.white,
-            boxShadow: [
-              BoxShadow(blurRadius: 2, spreadRadius: 2, color: Colors.black12)
-            ]),
+           ),
         child: FutureBuilder(
             future: WeatherApiClient().getCurrentWeather("kumasi"),
-            builder:
-                (BuildContext context, AsyncSnapshot<Weather> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<Weather> snapshot) {
               if (snapshot.hasData) {
                 return Row(
                   children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                     crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left:15.0,top: 5),
-                          child: Text(snapshot.data!.cityName,style: TextStyle(fontWeight: FontWeight.bold),),
-                        ),  
-                          
-                      
+                          padding: const EdgeInsets.only(left: 15.0, top: 5),
+                          child: Text(
+                            snapshot.data!.cityName,
+                            style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23),
+                          ),
+                        ),
                         Padding(
-                          padding: EdgeInsets.only(left:15.0),
+                          padding: EdgeInsets.only(left: 15.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -250,32 +336,36 @@ class WeatherCard extends StatelessWidget {
                                 width: 60,
                                 height: 60,
                                 decoration: BoxDecoration(
-                                  image: DecorationImage(image: NetworkImage('http://openweathermap.org/img/w/${snapshot.data!.icon}.png'))
-                                ),
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                            'http://openweathermap.org/img/w/${snapshot.data!.icon}.png'))),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(3.0),
                                 child: Text(
                                   "${snapshot.data!.temp} °C",
-                                  style: TextStyle(fontSize: 24),
+                                  style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.black38),
                                 ),
                               )
                             ],
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left:15.0),
-                          child: Text("${snapshot.data!.mainWeather}, ${snapshot.data!.description}"),
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: Text(
+                              "${snapshot.data!.mainWeather}, ${snapshot.data!.description}"),
                         )
                       ],
                     ),
                     Expanded(
                       child: Container(
-                           height: MediaQuery.of(context).size.height * 0.2,
-                         width: 150,
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        width: 150,
                         decoration: BoxDecoration(
-                                      image: DecorationImage(image: NetworkImage('http://openweathermap.org/img/w/${snapshot.data!.icon}.png'),fit: BoxFit.cover),
-                    
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                  'http://openweathermap.org/img/w/${snapshot.data!.icon}.png'),
+                              fit: BoxFit.cover),
                         ),
                       ),
                     )
